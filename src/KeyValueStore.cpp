@@ -98,3 +98,22 @@ std::string KeyValueStore::get(const std::string& key) {
 
     return node->value;
 }
+
+bool KeyValueStore::exists(const std::string& key) {
+    return cache.find(key) != cache.end();
+}
+
+bool KeyValueStore::del(const std::string& key) {
+    if (cache.find(key) == cache.end()) {
+        return false;
+    }
+
+    Node* node = cache[key];
+
+    removeNode(node);     // remove from linked list
+    cache.erase(key);     // remove from map
+
+    delete node;          // free memory
+
+    return true;
+}
